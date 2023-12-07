@@ -103,19 +103,31 @@
                   <div class="titlepage">
                      <h2>Sheet Extractor AI</h2>
                      <p>Song Maker 에서 Marimba 또는 Piano 악기로 음악을<br>작곡하고 .wav 파일을 업로드해 악보를 추출해보세요.</p>
-                     <label for="file">파일: </label>
-                     <input type="file" id="file">
-                     <br>
-                     <label for="bpm">BPM: </label>
-                     <input type="number" id="bpm">
-                     <br>
-                     <a class="read_more" href="https://musiclab.chromeexperiments.com/Song-Maker" target="_blank" rel="noopener noreferrer">Song Maker</a>
-                     <button class="read_more" type="button" onclick="OnSubmit()">악보 추출</button>
+                     <div class="row">
+                        <label for="file" id="file_label">파일</label>
+                        <input type="file" id="file" accept=".wav">
+                        <label for="bpm" id="bpm_label">BPM</label>
+                        <input type="number" id="bpm">
+                     </div>
+                     <div class="row">
+                        <a class="read_more" href="https://musiclab.chromeexperiments.com/Song-Maker" target="_blank" rel="noopener noreferrer">Song Maker</a>
+                        <button class="read_more" type="button" onclick="OnSubmit()" id="extract">악보 추출</button>
+                     </div>
                   </div>
                </div>
                <div class="col-md-6 padding_right2">
                   <div class="software_img">
                      <figure><img src="images/software_img.jpg" alt="#"/></figure>
+                  </div>
+               </div>
+            </div>
+            <div style="max-width: 75%; display: none;" id="result">
+               <div class="row">
+                  <div class="col-md-12">
+                     <audio id="audio" src="" controls>음원</audio>
+                     <a class="read_more" id="sheet" href="#" download>악보 다운로드</a>
+                     <img alt="loading" id="wave" src="" style="max-width: 75%; height: auto;"/>
+                     <img alt="loading" id="stft" src="" style="max-width: 75%; height: auto;"/>
                   </div>
                </div>
             </div>
@@ -285,8 +297,20 @@
            document.getElementById("mySidepanel").style.width = "0";
          }
          function OnSubmit(){
+            if(document.getElementById('file').files.length == 0){
+               alert("파일을 선택해주세요.")
+               return;
+            }
+            if(document.getElementById('bpm').value <= 0){
+               alert("BPM 값을 입력해주세요.")
+               return;
+            }
+            document.getElementById('extract').disabled = true;
+            document.getElementById('result').style.display = "none";
+
             var formData = new FormData();
             var identifier = Date.now();
+            
             var fileName = document.getElementById('file').files[0].name.split('.')[0];
             formData.append("identifier", identifier)
             formData.append("file", $('#file')[0].files[0]);
@@ -303,13 +327,17 @@
                   console.log("성공");
                   console.log(result);
 
-                  document.getElementById('result').style.display = "block";
                   document.getElementById('audio').src = ".\\temp\\" + identifier + "\\" + fileName + ".wav";
                   document.getElementById('stft').src = ".\\temp\\" + identifier + "\\" + fileName + ".sf.png";
                   document.getElementById('wave').src = ".\\temp\\" + identifier + "\\" + fileName + ".wf.png";
                   document.getElementById('sheet').href = ".\\temp\\" + identifier + "\\" + fileName + ".xml";
+                  
+                  document.getElementById('extract').disabled = false;
+                  document.getElementById('result').style.display = "block";
                },
                error:function(error) {
+                  document.getElementById('extract').disabled = false;
+                  document.getElementById('sheet').style.display = "none";
                   console.log("실패");
                }
             })
