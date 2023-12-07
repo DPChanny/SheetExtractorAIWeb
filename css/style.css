@@ -461,6 +461,8 @@ button {
 .software {
      background-color: #240082;
      margin-top: 90px;
+     padding-top: 50px;
+     padding-bottom: 50px;
 }
 
 .software .titlepage h2 {
@@ -471,12 +473,9 @@ button {
      margin: 0;
 }
 
-.software .software_img figure img {
-     height: 660px;
-}
-
 .software .titlepage {
-     max-width: 539px;
+     padding-bottom: 50px;
+     max-width: 550px;
      width: 100%;
      float: right;
 }
@@ -493,14 +492,9 @@ button {
      border-radius: 20px;
 }
 
-.software .read_more {
-     margin-top: 20px;
-}
-
 .software .read_more:hover {
      background-color: #fcc10e;
 }
-
 
 /** end software section **/
 
